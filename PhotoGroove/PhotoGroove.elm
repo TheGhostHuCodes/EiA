@@ -11,19 +11,32 @@ urlPrefix =
 view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
-        , div [ id "thumbnails" ] (List.map viewThumbnail model)
+        , div [ id "thumbnails" ]
+            (List.map (viewThumbnail model.selectedUrl) model.photos)
+        , img
+            [ class "large"
+            , src (urlPrefix ++ model.selectedUrl)
+            ]
+            []
         ]
 
 
-viewThumbnail thumbnail =
-    img [ src (urlPrefix ++ thumbnail.url) ] []
+viewThumbnail selectedUrl thumbnail =
+    img
+        [ src (urlPrefix ++ thumbnail.url)
+        , classList [ ( "selected", selectedUrl == thumbnail.url ) ]
+        ]
+        []
 
 
 initialModel =
-    [ { url = "cast_iron_pans.png" }
-    , { url = "making_progress.png" }
-    , { url = "immune_system.png" }
-    ]
+    { photos =
+        [ { url = "cast_iron_pans.png" }
+        , { url = "making_progress.png" }
+        , { url = "immune_system.png" }
+        ]
+    , selectedUrl = "cast_iron_pans.png"
+    }
 
 
 main =
