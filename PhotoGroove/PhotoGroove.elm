@@ -19,9 +19,16 @@ type alias Photo =
     { url : String }
 
 
+type ThumbnailSize
+    = Small
+    | Medium
+    | Large
+
+
 type alias Model =
     { photos : List Photo
     , selectedUrl : String
+    , chosenSize : ThumbnailSize
     }
 
 
@@ -32,7 +39,10 @@ view model =
         , button
             [ onClick { operation = "SUPRISE_ME", data = "" } ]
             [ text "Surprise Me!" ]
-        , div [ id "thumbnails" ]
+        , h3 [] [ text "Thumbnail Size:" ]
+        , div [ id "choose-size" ]
+            (List.map viewSizeChooser [ Small, Medium, Large ])
+        , div [ id "thumbnails", class (sizeToString model.chosenSize) ]
             (List.map (viewThumbnail model.selectedUrl) model.photos)
         , img
             [ class "large"
@@ -40,6 +50,27 @@ view model =
             ]
             []
         ]
+
+
+viewSizeChooser : ThumbnailSize -> Html Msg
+viewSizeChooser size =
+    label []
+        [ input [ type_ "radio", name "size" ] []
+        , text (sizeToString size)
+        ]
+
+
+sizeToString : ThumbnailSize -> String
+sizeToString size =
+    case size of
+        Small ->
+            "small"
+
+        Medium ->
+            "med"
+
+        Large ->
+            "large"
 
 
 viewThumbnail : String -> Photo -> Html Msg
@@ -60,6 +91,7 @@ initialModel =
         , { url = "3.jpeg" }
         ]
     , selectedUrl = "2.jpeg"
+    , chosenSize = Medium
     }
 
 
