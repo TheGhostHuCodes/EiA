@@ -65,12 +65,15 @@ initialModel =
 
 update : Msg -> Model -> Model
 update msg model =
-    if msg.operation == "SELECT_PHOTO" then
-        { model | selectedUrl = msg.data }
-    else if msg.operation == "SUPRISE_ME" then
-        { model | selectedUrl = "2.jpeg" }
-    else
-        model
+    case msg.operation of
+        "SELECT_PHOTO" ->
+            { model | selectedUrl = msg.data }
+
+        "SUPRISE_ME" ->
+            { model | selectedUrl = "2.jpeg" }
+
+        _ ->
+            model
 
 
 photoArray : Array Photo
