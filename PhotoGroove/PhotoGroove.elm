@@ -10,6 +10,21 @@ urlPrefix =
     "https://imgs.xkcd.com/comics/"
 
 
+type alias Msg =
+    { operation : String, data : String }
+
+
+type alias Photo =
+    { url : String }
+
+
+type alias Model =
+    { photos : List Photo
+    , selectedUrl : String
+    }
+
+
+view : Model -> Html Msg
 view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
@@ -23,6 +38,7 @@ view model =
         ]
 
 
+viewThumbnail : String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumbnail =
     img
         [ src (urlPrefix ++ thumbnail.url)
@@ -32,7 +48,7 @@ viewThumbnail selectedUrl thumbnail =
         []
 
 
-initialModel : { photos : List { url : String }, selectedUrl : String }
+initialModel : Model
 initialModel =
     { photos =
         [ { url = "cast_iron_pans.png" }
