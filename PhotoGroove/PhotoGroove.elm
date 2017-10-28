@@ -12,28 +12,10 @@ urlPrefix =
     "http://elm-in-action.com/"
 
 
-type Msg
-    = SelectByUrl String
-    | SelectByIndex Int
-    | SurpriseMe
-    | SetSize ThumbnailSize
-
-
-type alias Photo =
-    { url : String }
-
-
 type ThumbnailSize
     = Small
     | Medium
     | Large
-
-
-type alias Model =
-    { photos : List Photo
-    , selectedUrl : String
-    , chosenSize : ThumbnailSize
-    }
 
 
 view : Model -> Html Msg
@@ -54,6 +36,16 @@ view model =
             ]
             []
         ]
+
+
+viewThumbnail : String -> Photo -> Html Msg
+viewThumbnail selectedUrl thumbnail =
+    img
+        [ src (urlPrefix ++ thumbnail.url)
+        , classList [ ( "selected", selectedUrl == thumbnail.url ) ]
+        , onClick (SelectByUrl thumbnail.url)
+        ]
+        []
 
 
 viewSizeChooser : ThumbnailSize -> Html Msg
@@ -77,14 +69,15 @@ sizeToString size =
             "large"
 
 
-viewThumbnail : String -> Photo -> Html Msg
-viewThumbnail selectedUrl thumbnail =
-    img
-        [ src (urlPrefix ++ thumbnail.url)
-        , classList [ ( "selected", selectedUrl == thumbnail.url ) ]
-        , onClick (SelectByUrl thumbnail.url)
-        ]
-        []
+type alias Photo =
+    { url : String }
+
+
+type alias Model =
+    { photos : List Photo
+    , selectedUrl : String
+    , chosenSize : ThumbnailSize
+    }
 
 
 initialModel : Model
@@ -97,6 +90,11 @@ initialModel =
     , selectedUrl = "2.jpeg"
     , chosenSize = Medium
     }
+
+
+photoArray : Array Photo
+photoArray =
+    Array.fromList initialModel.photos
 
 
 getPhotoUrl : Int -> String
@@ -114,6 +112,13 @@ randomPhotoPicker =
     Random.int 0 (Array.length photoArray - 1)
 
 
+type Msg
+    = SelectByUrl String
+    | SelectByIndex Int
+    | SurpriseMe
+    | SetSize ThumbnailSize
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -128,11 +133,6 @@ update msg model =
 
         SetSize size ->
             ( { model | chosenSize = size }, Cmd.none )
-
-
-photoArray : Array Photo
-photoArray =
-    Array.fromList initialModel.photos
 
 
 main : Program Never Model Msg
