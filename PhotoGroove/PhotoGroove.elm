@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Array exposing (Array)
 import Random
+import Http
 
 
 urlPrefix : String
@@ -101,6 +102,7 @@ type Msg
     | SelectByIndex Int
     | SurpriseMe
     | SetSize ThumbnailSize
+    | LoadPhotos (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -130,12 +132,32 @@ update msg model =
         SetSize size ->
             ( { model | chosenSize = size }, Cmd.none )
 
+        LoadPhotos (Ok responseStr) ->
+            let
+                urls =
+                    String.split "," responseStr
+
+                photos =
+                    List.map Photo urls
+            in
+                ( { model | photos = photos }, Cmd.none )
+
+        LoadPhotos (Err _) ->
+            ( model, Cmd.none )
+
+
+initialCmd : Cmd Msg
+initialCmd =
+    "http://elm-in-action.com/photos/list"
+        |> Http.getString
+        |> Http.send LoadPhotos
+
 
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( initialModel, Cmd.none )
+        { init = ( initialModel, initialCmd )
         , view = view
         , update = update
-        , subscriptions = (\model -> Sub.none)
+        , subscriptions = (\_ -> Sub.none)
         }
