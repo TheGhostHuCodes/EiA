@@ -8,7 +8,7 @@ import Array exposing (Array)
 
 urlPrefix : String
 urlPrefix =
-    "https://imgs.xkcd.com/comics/"
+    "http://elm-in-action.com/"
 
 
 type alias Msg =
@@ -36,7 +36,7 @@ view model =
             (List.map (viewThumbnail model.selectedUrl) model.photos)
         , img
             [ class "large"
-            , src (urlPrefix ++ model.selectedUrl)
+            , src (urlPrefix ++ "large/" ++ model.selectedUrl)
             ]
             []
         ]
@@ -55,11 +55,11 @@ viewThumbnail selectedUrl thumbnail =
 initialModel : Model
 initialModel =
     { photos =
-        [ { url = "cast_iron_pans.png" }
-        , { url = "making_progress.png" }
-        , { url = "immune_system.png" }
+        [ { url = "1.jpeg" }
+        , { url = "2.jpeg" }
+        , { url = "3.jpeg" }
         ]
-    , selectedUrl = "cast_iron_pans.png"
+    , selectedUrl = "2.jpeg"
     }
 
 
@@ -68,7 +68,7 @@ update msg model =
     if msg.operation == "SELECT_PHOTO" then
         { model | selectedUrl = msg.data }
     else if msg.operation == "SUPRISE_ME" then
-        { model | selectedUrl = "making_progress.png" }
+        { model | selectedUrl = "2.jpeg" }
     else
         model
 
