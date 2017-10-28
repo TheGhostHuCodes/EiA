@@ -3,6 +3,7 @@ module PhotoGroove exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Array exposing (Array)
 
 
 urlPrefix : String
@@ -64,6 +65,11 @@ update msg model =
         { model | selectedUrl = msg.data }
     else
         model
+
+
+photoArray : Array Photo
+photoArray =
+    Array.fromList initialModel.photos
 
 
 main =
