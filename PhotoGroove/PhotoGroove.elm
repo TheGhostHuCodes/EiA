@@ -190,3 +190,8 @@ main =
         , update = update
         , subscriptions = (\_ -> Sub.none)
         }
+
+
+paperSlider : List (Attribute msg) -> List (Html msg) -> Html msg
+paperSlider =
+    node "paper-slider"
