@@ -58,7 +58,7 @@ viewLarge maybeUrl =
             text ""
 
         Just url ->
-            img [ class "large", src (urlPrefix ++ "large/" ++ url) ] []
+            canvas [ id "main-canvas", class "large" ] []
 
 
 viewThumbnail : Maybe String -> Photo -> Html Msg
