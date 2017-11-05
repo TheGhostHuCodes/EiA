@@ -8,10 +8,9 @@ import Json.Decode exposing (decodeString)
 
 decoderTest : Test
 decoderTest =
-    test "title defaults to (untitled)"
-        (\_ ->
+    test "title defaults to (untitled)" <|
+        \_ ->
             """{"url": "fruits.com", "size": 5}"""
                 |> decodeString photoDecoder
-                |> Expect.equal
-                    (Ok { url = "fruits.com", size = 5, title = "(untitled)" })
-        )
+                |> Result.map .title
+                |> Expect.equal (Ok "(untitled)")
