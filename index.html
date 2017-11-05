@@ -21,7 +21,7 @@
         });
 
         Pasta.addStatusListener(function (status) {
-            console.log("Got a new status to send to Elm: ", status);
+            app.ports.statusChanges.send(status);
         });
     </script>
 </body>

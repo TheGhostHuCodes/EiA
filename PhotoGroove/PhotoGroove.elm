@@ -97,6 +97,9 @@ sizeToString size =
 port setFilters : FilterOptions -> Cmd msg
 
 
+port statusChanges : (String -> msg) -> Sub msg
+
+
 type alias FilterOptions =
     { url : String, filters : List { name : String, amount : Float } }
 
@@ -253,7 +256,7 @@ main =
         { init = ( initialModel, initialCmd )
         , view = viewOrError
         , update = update
-        , subscriptions = (\_ -> Sub.none)
+        , subscriptions = (\_ -> statusChanges SetStatus)
         }
 
 
