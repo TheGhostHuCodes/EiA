@@ -6,6 +6,7 @@ import Html.Attributes as Attr
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, tag, attribute)
+import Test.Html.Event as Event
 import PhotoGroove exposing (..)
 import Json.Decode exposing (decodeValue)
 import Json.Encode as Encode
@@ -96,3 +97,26 @@ urlsFromCount : Int -> List String
 urlsFromCount urlCount =
     List.range 1 urlCount
         |> List.map (\num -> toString num ++ ".png")
+
+
+clickThumbnail : Test
+clickThumbnail =
+    fuzz3 urlFuzzer string urlFuzzer "clicking a thumbnail selects it" <|
+        \urlsBefore urlToSelect urlsAfter ->
+            let
+                url =
+                    urlToSelect ++ ".jpeg"
+
+                photos =
+                    (urlsBefore ++ url :: urlsAfter)
+                        |> List.map photoFromUrl
+
+                srcToClick =
+                    urlPrefix ++ url
+            in
+                { initialModel | photos = photos }
+                    |> PhotoGroove.view
+                    |> Query.fromHtml
+                    |> Query.find [ tag "img", attribute <| Attr.src srcToClick ]
+                    |> Event.simulate Event.click
+                    |> Event.expect (SelectByUrl url)
