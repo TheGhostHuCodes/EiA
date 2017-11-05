@@ -19,6 +19,10 @@
                 Pasta.apply(document.getElementById("main-canvas"), options);
             });
         });
+
+        Pasta.addStatusListener(function (status) {
+            console.log("Got a new status to send to Elm: ", status);
+        });
     </script>
 </body>
 
