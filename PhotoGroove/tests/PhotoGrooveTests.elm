@@ -73,14 +73,9 @@ thumbnailRendered url query =
 
 thumbnailsWork : Test
 thumbnailsWork =
-    fuzz (Fuzz.intRange 1 5) "URLs render as thumbnails" <|
-        \urlCount ->
+    fuzz urlFuzzer "URLs render as thumbnails" <|
+        \urls ->
             let
-                urls : List String
-                urls =
-                    List.range 1 urlCount
-                        |> List.map (\num -> toString num ++ ".png")
-
                 thumbnailChecks : List (Query.Single msg -> Expectation)
                 thumbnailChecks =
                     List.map thumbnailRendered urls
@@ -89,3 +84,15 @@ thumbnailsWork =
                     |> PhotoGroove.view
                     |> Query.fromHtml
                     |> Expect.all thumbnailChecks
+
+
+urlFuzzer : Fuzzer (List String)
+urlFuzzer =
+    Fuzz.intRange 1 5
+        |> Fuzz.map urlsFromCount
+
+
+urlsFromCount : Int -> List String
+urlsFromCount urlCount =
+    List.range 1 urlCount
+        |> List.map (\num -> toString num ++ ".png")
